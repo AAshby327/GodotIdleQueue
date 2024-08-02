@@ -22,69 +22,70 @@ SOFTWARE.
 """
 
 class_name IdleQueueSingleton extends Node
-## Signleton script that will process methods during idle time on the main thread.
+## Singleton script that will process methods during idle time on the main thread.
 ##
-## The IdleQueue signleton places callables in a queue to be executed when the 
+## The IdleQueue singleton places callables in a queue to be executed when the
 ## cpu is not busy, prioritizing the physics and main processes of the game
-## with minimal effect on the frame rate. This allows methods to be run in the 
-## background on the main thread. (All member functions of this singleton are 
-## thread safe). 
+## with minimal effect on the frame rate. This allows methods to be run in the
+## background on the main thread. (All member functions of this singleton are
+## thread safe).
 ## [br][br]
-## Every frame, the Godot Engine will call the [method Node._physics_process] 
-## and [method Node._process] functions for every node in the scene tree. 
+## Every frame, the Godot Engine will call the [method Node._physics_process]
+## and [method Node._process] functions for every node in the scene tree.
 ## Once every node has been processed, the engine will stay idle, and wait for
-## the next frame to start. The IdleQueue uses this time where the main thread 
+## the next frame to start. The IdleQueue uses this time where the main thread
 ## would normally be idle to process queued callables until the next frame begins.
 ## [br][br]
-## Some games however, will have less idle time to work with than others, 
+## Some games however, will have less idle time to work with than others,
 ## whether it is because the node processing takes up most of the frame time,
 ## or if the frame rate is unlimited. Less idle time will mean that the queued
-## methods will take longer to process. To counteract this, 
-## [member min_process_time_usec] can be used to ensure that the singleton 
+## methods will take longer to process. To counteract this,
+## [member min_process_time_usec] can be used to ensure that the singleton
 ## processes queued calls for a given amount of time each frame. The exchange
-## for faster idle processing is a decrease in frame rate during times of 
+## for faster idle processing is a decrease in frame rate during times of
 ## increased physics and or main processing times.
 ## [br][br]
 ## [b]Queues:[/b] Callables can be enqueued into separate queues which act as
-## separate groups of tasks that can be prioritized, paused, or canceled. 
-## A queue can be created using [method create_queue]. This function will 
+## separate groups of tasks that can be prioritized, paused, or canceled.
+## A queue can be created using [method create_queue]. This function will
 ## return the queue's id as an integer. This id can then be used to interact
-## with the queue through this signleton. Each queue has a priority represented
-## as an integer (this can be set by using [method set_queue_priority]). Each 
-## frame, the singleton will process the (unpaused) queue with the highest 
+## with the queue through this singleton. Each queue has a priority represented
+## as an integer (this can be set by using [method set_queue_priority]). Each
+## frame, the singleton will process the (unpaused) queue with the highest
 ## priority value. Once complete, the singleton will move on to the queue
 ## of the next highest value, and so on. [br]
-## Queues can also be locked. Once locked, queues will no longer be able to 
-## recieve more callables, and the queue will be deleted after it is completed
-## or canceled. This can be useful for grouping a limited set of callables 
+## Queues can also be locked. Once locked, queues will no longer be able to
+## receive more callables, and the queue will be deleted after it is completed
+## or canceled. This can be useful for grouping a limited set of callables
 ## that are all part of the same overarching task, that will be discarded once
 ## the task if complete.
 ## [br][br]
 ## [b]The Default Queue:[/b] The singleton has a queue that cannot be locked
 ## or deleted that can be accessed using [member DEFAULT_QUEUE_ID]. This acts as
-## a simple queue for any callables that do not need a completely separate 
-## queue, or you can just use the defualt queue for all callables if you just 
-## don't want deal with managing queues.
+## a simple queue for any callables that do not need a completely separate
+## queue, or you can just use the default queue for all callables if you just
+## don't want to deal with managing queues.
 ## [br][br]
 ## [b]Best Practices:[/b] [br]
-## It is optimal to separate larger functions into sets of smaller tasks when 
+## It is optimal to separate larger functions into sets of smaller tasks when
 ## adding them to a queue. This is because once a queued callable is executed,
-## it does not stop until the method is finished. If the method takes longer 
+## it does not stop until the method is finished. If the method takes longer
 ## to execute than the frame rate has time for, it will cause lag. As an example:
 ## [codeblock]
 ## # Instead of:
 ## func my_func():
-##     for i in range(500):
-##         my_other_func(i)
+## 	for i in range(500):
+##     	my_other_func(i)
 ##
 ## func _ready():
-##     IdleQueue.add_task(my_func)
+## 	IdleQueue.add_task(my_func)
 ##
 ## # Do this:
 ## func _ready():
-##     for i in range(500):
-##         IdleQueue.add_task(my_other_func.bind(i))
+## 	for i in range(500):
+##     	IdleQueue.add_task(my_other_func.bind(i))
 ## [/codeblock]
+
 
 
 ## Emitted when all nodes have finished processing (including idle processing).
@@ -100,7 +101,7 @@ const DEFAULT_QUEUE_ID := 0
 
 ## The minimum amount of time (in microseconds) the singleton must spend processing
 ## queued calls each frame. This prevents the idle processing from being completely
-## haulted if other processes are taking up too much the time between frames.
+## halted if other processes are taking up too much time between frames.
 @export var min_process_time_usec : int = 0
 
 ## The amount of time (in microseconds) the singleton will set aside to process
@@ -222,7 +223,7 @@ func update_fps() -> void:
 		_frame_time_usec = 0;
 
 
-## Checks if tasks from the IdleQueue are currently being excecuted.
+## Checks if tasks from the IdleQueue are currently being executed.
 func is_processing_tasks() -> bool:
 	return _processing
 
@@ -356,7 +357,7 @@ func set_queue_completion_task(queue_id:int, callable:Callable) -> void:
 
 ## Gives a queue a task to call if the queue is canceled.
 ## [param queue_id]: The id of the queue to add the task to (given by create_queue()).
-## [param callable]: The method to call on cancelation.
+## [param callable]: The method to call on cancellation.
 func set_queue_cancel_task(queue_id:int, callable:Callable) -> void:
 	var queue := _queue_dict.get(queue_id) as TaskQueue
 	
@@ -415,7 +416,7 @@ func is_queue_paused(queue_id:int) -> bool:
 	return queue.paused
 
 
-## Locks a queue. Locked queues cannot recieve more tasks and will be deleted upon completion.
+## Locks a queue. Locked queues cannot receive more tasks and will be deleted upon completion.
 ## [param queue_id]: The id of the queue to unpause (given by create_queue()).
 func lock_queue(queue_id:int) -> Error:
 	
@@ -536,7 +537,7 @@ func _get_next_unordered_task(start : Task) -> Task:
 	
 	return null
 
-
+# Task data structure that contains execution data and acts as a node in a linked list.
 class Task:
 	var callable : Callable
 	var ordered : bool
@@ -548,6 +549,7 @@ class Task:
 		callable = _callable
 		ordered = _ordered
 
+# Queue object, a linked list of Tasks.
 class TaskQueue:
 	var id : int
 	var priority : int = 0
@@ -565,6 +567,7 @@ class TaskQueue:
 		id = _id
 		priority = _priority
 	
+	# Adds a task(s) to the end of the queue
 	func add(task:Task) -> void:
 		
 		if first == null:
@@ -577,6 +580,8 @@ class TaskQueue:
 		while last.next_task != null:
 			last = last.next_task
 	
+	# Removes a Task from the queue.
+	# Make sure the given Task is inside this queue or it will cause errors.
 	func remove(task:Task) -> void:
 		
 		if task.previous_task != null:
@@ -591,6 +596,7 @@ class TaskQueue:
 		if task == last:
 			last = task.previous_task
 	
+	# Empties the list of Tasks.
 	func clear() -> void:
 		first = null
 		last = null

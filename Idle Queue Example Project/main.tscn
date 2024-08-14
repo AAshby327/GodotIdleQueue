@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpolu3lar6y3e"]
+
+[ext_resource type="Texture2D" uid="uid://nxruvnl1giva" path="res://icon.svg" id="1_bno8y"]
+[ext_resource type="Script" path="res://main.gd" id="1_n377n"]
+[ext_resource type="Script" path="res://Icon.gd" id="3_2ypbe"]
+[ext_resource type="Script" path="res://fpsCounter.gd" id="3_fu1xr"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_n377n")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(583, 330)
+texture = ExtResource("1_bno8y")
+script = ExtResource("3_2ypbe")
+
+[node name="fpsCounter" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("3_fu1xr")

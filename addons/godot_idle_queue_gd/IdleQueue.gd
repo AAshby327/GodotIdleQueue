@@ -85,6 +85,8 @@ class_name IdleQueueSingleton extends Node
 ## 	for i in range(500):
 ##     	IdleQueue.add_task(my_other_func.bind(i))
 ## [/codeblock]
+##
+## @tutorial: https://github.com/AAshby327/GodotIdleQueue/blob/main/README.md
 
 
 
@@ -197,7 +199,7 @@ func _process(delta):
 					_queue_dict.erase(_current_queue.id)
 					_mutex.unlock()
 					
-					_current_queue.free()
+					_current_queue = null
 				
 				if not _get_highest_priority_queue():
 					break

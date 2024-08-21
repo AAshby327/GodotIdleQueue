@@ -21,7 +21,7 @@ While this program does not use multithreading, it supports working in tandem wi
 
 If you did it correctly, you should see that "IdleQueue" is registered as an autoload under Project>Project Settings>Autoload, and you can access the singleton members using the keyword "IdleQueue".
 
-Alternatively, you can just create and paste GodotIdleQueue://addons/godot_idle_queue_gd/IdleQueue.gd into your project and then manually register the script as an autoload.
+Alternatively, you can just copy and paste GodotIdleQueue://addons/godot_idle_queue_gd/IdleQueue.gd into your project and then manually register the script as an autoload.
 
 ## The basics
 
